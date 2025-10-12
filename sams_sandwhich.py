@@ -12,17 +12,14 @@ def force_name(message,lower,upper):
 
 #This function will ensure the user can only enter in a valid number within a range
 
-def force_number(message,lower,upper):
+def force_phone_number(message,lower,upper):
     while True:  # Forces the user to enter a valid number
-        try:
-            num=int(input(message))  # Convert input to an integer
-            if num>=lower and num<=upper:  # Check if number is within the valid range
+            cell=str(input(message))  # Convert input to an string
+            if len(cell)>=lower and len(cell)<=upper and cell.isnumeric():  # Check if number is within the valid range
                 break  # Valid number, exit loop
             else:
-                print('Please enter a valid number, thanks.')
-        except ValueError:  # This will pick up any errors if an integer was not entered
-            print('Error - only type in numbers please.')
-    return num
+                print(f"ERROR!, Please enter a number with {lower} - {upper} digits")
+    return cell #return a valid number between a range
 
 def force_list(message,lower,upper):
     while True:  # Forces the user to enter a valid number
@@ -45,45 +42,44 @@ def print_lists(list,item):
     return
 
 
-def bread_selection():
+def bread_selection(): #the purpose of this function is to allow the user to select a singular item on the list
     bread_list = ["White", "Brown", "Italian", "Granary"]
     print_lists(bread_list,"breads")
     bread_selected=force_list("Which bread did you want? Enter a number: ",1,len(bread_list))
     return bread_list[bread_selected-1]
 
-def meat_selection():
+def meat_selection(): #the purpose of this function is to allow the user to select a singular item on the list
     meat_list = ["Chicken", "Pork", "Beef", "Meatballs", "Duck"]
     print_lists(meat_list,"meats")
     meat_selected=force_list("which meat did you want? Enter a number: ",1,len(meat_list))
     return meat_list[meat_selected-1]
 
-def cheese_selection():
+def cheese_selection(): #the purpose of this function is to allow the user to select a singular item on the list
     cheese_list = ["Cheddar", "Mozzerella", "Swiss", "American", "Blue"]
     print_lists(cheese_list,"cheeses")
     cheese_selected=force_list("which cheese did you want? Enter a number: ",1,len(cheese_list))
     return cheese_list[cheese_selected-1]
 
-def dressing_selection():
+def dressing_selection(): #the purpose of this function is to allow the user to select a singular item on the list
     dressing_list = ["Mayonaise", "Ranch", "Mustard", "Butter", "Pesto"]
     print_lists(dressing_list,"dressings")
     dressing_selected=force_list("which dressing did you want? Enter a number: ",1,len(dressing_list))
     return dressing_list[dressing_selected-1]
 
 
-def salads_selection():
-    salad_list = ["Lettuce", "Tomato", "Carrot", "Cucumber", "Onions"]
+def salads_selection(): #the purpose of this function is to allow the user to select multiple items on the list
+    salad_list = ["Lettuce", "Tomato", "Carrot", "Cucumber", "Onions", "No salads/extra salads"]
     print_lists(salad_list,"salads")
     print("Press ENTER when you have finished choosing your salads")
-    salads_added = "" #will hold a string of more than one item
-    selected_salad= " " #prompts the user to enter a number in to select a salad
-
-    while selected_salad != "":#if enter is not pressed it will keep prompting the user to select a salad
-        selected_salad= input(f"What number salad do you want?\nYou have selected: {salads_added}")
-        if selected_salad != "": #if you press enter this if statement won't run
-            selected_salad= int(selected_salad)
-            #this variable keeps adding on each selected item from salad list
-            salads_added = salads_added + " " + salad_list[selected_salad-1]
-    return salads_added.strip() #removes empty space at start of the string
+    salad_choice=[] #empty list to hold the selected salads
+    while True:
+        salad_options=force_list("what number salad do you want? \n 1- Lettuce \n 2-Tomato \n 3-Carrot \n 4-Cucumber \n 5-Onions \n 6-No salads/extra salads",1,len(salad_list))
+        print(f"Your salacted salads: {salad_choice}")       
+        if salad_options==6:
+            break
+        salad_choice.append(salad_list[salad_options-1]) #adding seleced salad to the list
+    return ",".join(salad_choice) #returns a string formatting the options
+    
 
 def output_textfile(first_name,phone_number,sandwhich_order):
     date_time=datetime.datetime.now()
@@ -107,7 +103,7 @@ def main_program():
     today=datetime.datetime.now()
     print("Welcome to Sam's Sandwhich Shop")
     first_name=force_name("Please enter in your first name: ",2,15)
-    phone_number=force_number("Please enter your phone number: ",0,999999999999999)
+    phone_number=force_phone_number("Please enter your phone number: ",8,13)
     bread_choice=bread_selection() #creating a variable that calls up  the bread function and returns their choice
     meat_choice=meat_selection() #creating a variable that calls up  the meat function and returns their choice
     cheese_choice=cheese_selection() #creating a variable that calls up  the cheese function and returns their choice
